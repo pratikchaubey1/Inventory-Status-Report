@@ -1,0 +1,413 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --bg-main: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --border: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    background-image: radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
+        radial-gradient(at 50% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px;
+}
+
+/* ========== LOGIN PAGE ========== */
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    margin: auto;
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-container h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+    background: linear-gradient(135deg, #4f46e5 0%, #10b981 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.login-container p {
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 15px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #fff;
+    color: var(--text-main);
+}
+
+.input-group input {
+    padding-left: 45px;
+}
+
+.search-wrapper {
+    position: relative;
+    max-width: 400px;
+}
+
+.search-wrapper .input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.search-wrapper input {
+    padding-left: 45px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none !important;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 14px;
+    width: auto !important;
+    padding: 0 !important;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3);
+}
+
+.forgot-link {
+    display: block;
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 25px;
+    color: var(--primary);
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* ========== DASHBOARD PANEL ========== */
+.panel {
+    width: 100%;
+    max-width: 1600px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.dashboard-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.dashboard-btn-group {
+    display: flex;
+    gap: 12px;
+}
+
+.dashboard-btn-group button {
+    width: auto;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+/* ========== TABLE SYSTEM ========== */
+.inventory-table-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    border: 1px solid var(--border);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+thead th {
+    background: #f8fafc;
+    padding: 16px 20px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    font-size: 11px;
+    border-bottom: 1px solid var(--border);
+}
+
+tbody td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: #fdfdfd;
+}
+
+.clickable-report-row:hover {
+    background: #eff6ff !important;
+}
+
+/* Action Buttons in Table */
+td button {
+    width: auto !important;
+    padding: 6px 12px !important;
+    font-size: 12px;
+    display: inline-flex;
+    margin-right: 5px;
+}
+
+td button:last-child {
+    margin-right: 0;
+}
+
+/* ========== STATUS BADGES ========== */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-available {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.status-issued {
+    background: #fff7ed;
+    color: #d97706;
+}
+
+/* ========== TABLE ACTIONS ========== */
+.edit-btn {
+    background: #fef3c7 !important;
+    color: #d97706 !important;
+    width: auto !important;
+}
+
+.delete-btn {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+    width: auto !important;
+}
+
+.edit-btn:hover {
+    background: #fde68a !important;
+}
+
+.delete-btn:hover {
+    background: #fecaca !important;
+}
+
+/* ========== FILTER BUTTONS ========== */
+.filter-btn {
+    width: auto !important;
+    padding: 8px 16px !important;
+    font-size: 13px;
+    background: #f1f5f9;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.filter-btn:hover {
+    background: #e2e8f0;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.export-btn {
+    background: #10b981 !important;
+    color: white !important;
+    transition: all 0.3s ease;
+}
+
+.export-btn:hover {
+    background: #059669 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* ========== CARD BOXES ========== */
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
+}
+
+.inventory-form {
+    margin-bottom: 40px;
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+/* ========== UTILITIES ========== */
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
