@@ -448,6 +448,7 @@ C:\Users\admin\OneDrive\Desktop\product\inventory\bin\Debug\net10.0\ExcelNumberF
 C:\Users\admin\OneDrive\Desktop\product\inventory\bin\Debug\net10.0\RBush.dll
 C:\Users\admin\OneDrive\Desktop\product\inventory\bin\Debug\net10.0\SixLabors.Fonts.dll
 C:\Users\admin\OneDrive\Desktop\product\inventory\bin\Debug\net10.0\System.IO.Packaging.dll
-C:\Users\admin\OneDrive\Desktop\product\inventory\obj\Debug\net10.0\compressed\y6hy1vdoti-{0}-7bbdgdjzkb-7bbdgdjzkb.gz
-C:\Users\admin\OneDrive\Desktop\product\inventory\obj\Debug\net10.0\compressed\c4idp0d11r-{0}-pzo4sf8441-pzo4sf8441.gz
 C:\Users\admin\OneDrive\Desktop\product\inventory\obj\Debug\net10.0\compressed\7q50fbn6e1-{0}-qh2ydgifdb-qh2ydgifdb.gz
+C:\Users\admin\OneDrive\Desktop\product\inventory\obj\Debug\net10.0\compressed\y6hy1vdoti-{0}-zsos44iiyb-zsos44iiyb.gz
+C:\Users\admin\OneDrive\Desktop\product\inventory\obj\Debug\net10.0\inventory.sourcelink.json
+C:\Users\admin\OneDrive\Desktop\product\inventory\obj\Debug\net10.0\compressed\c4idp0d11r-{0}-o2kdqdv2z4-o2kdqdv2z4.gz
