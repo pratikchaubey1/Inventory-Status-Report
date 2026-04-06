@@ -5,6 +5,7 @@ using InventoryAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using InventoryAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +75,16 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Middleware
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Append("X-Frame-Options", "DENY");
+    context.Response.Headers.Append("X-XSS-Protection", "1; mode=block");
+    await next();
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

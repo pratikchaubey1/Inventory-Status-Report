@@ -3195,11 +3195,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "projectUniqueName": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "projectName": "inventory",
-      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\obj\\",
+      "outputPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config"

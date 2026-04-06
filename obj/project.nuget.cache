@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "j7o8r3+G/UM=",
+  "dgSpecHash": "ZajjYI+Z2qI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+  "projectFilePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
@@ -72,9 +72,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'Azure.Identity' 1.10.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-m5vv-6r4h-3vj9",
-      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "filePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "libraryId": "Azure.Identity",
       "targetGraphs": [
         "net10.0"
@@ -84,9 +84,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'Azure.Identity' 1.10.3 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-wvxc-855f-jvrv",
-      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "filePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "libraryId": "Azure.Identity",
       "targetGraphs": [
         "net10.0"
@@ -96,9 +96,9 @@
       "code": "NU1902",
       "level": "Warning",
       "message": "Package 'Microsoft.Identity.Client' 4.56.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-m5vv-6r4h-3vj9",
-      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "filePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "libraryId": "Microsoft.Identity.Client",
       "targetGraphs": [
         "net10.0"
@@ -108,9 +108,9 @@
       "code": "NU1901",
       "level": "Warning",
       "message": "Package 'Microsoft.Identity.Client' 4.56.0 has a known low severity vulnerability, https://github.com/advisories/GHSA-x674-v45j-fwxw",
-      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "projectPath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\inventory\\inventory.csproj",
+      "filePath": "C:\\Users\\admin\\OneDrive\\Desktop\\product\\Inventory-Status-Report\\inventory.csproj",
       "libraryId": "Microsoft.Identity.Client",
       "targetGraphs": [
         "net10.0"

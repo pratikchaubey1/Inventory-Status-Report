@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using ClosedXML.Excel;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryAPI.Controllers;
 
@@ -14,10 +15,12 @@ namespace InventoryAPI.Controllers;
 public class InventoryController : ControllerBase
 {
     private readonly AppDbContext _context;
+    private readonly ILogger<InventoryController> _logger;
 
-    public InventoryController(AppDbContext context)
+    public InventoryController(AppDbContext context, ILogger<InventoryController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -64,6 +67,9 @@ public class InventoryController : ControllerBase
             await _context.SaveChangesAsync();
         }
 
+        var loggedUser = User.FindFirstValue(ClaimTypes.Name);
+        _logger.LogInformation("User {User} created new inventory item: {MakeAndModel}", loggedUser, newItem.MakeAndModel);
+
         return Ok(newItem);
     }
 
@@ -80,6 +86,7 @@ public class InventoryController : ControllerBase
         // Security check: only admins or the person holding the asset can update it
         if (currentUserRole != "Admin" && dbItem.EmpNo != currentUserEmpNo)
         {
+            _logger.LogWarning("Unauthorized update attempt on asset {AssetId} by user {EmpNo}", id, currentUserEmpNo);
             return Forbid();
         }
 
@@ -165,6 +172,8 @@ public class InventoryController : ControllerBase
         dbItem.UpdatedAt = DateTime.Now;
 
         await _context.SaveChangesAsync();
+        
+        _logger.LogInformation("Asset {Id} updated by user {User}", dbItem.Id, currentUserEmpNo);
         return Ok(dbItem);
     }
 
@@ -177,6 +186,9 @@ public class InventoryController : ControllerBase
 
         _context.Inventories.Remove(item);
         await _context.SaveChangesAsync();
+        
+        var currentUserEmpNo = User.FindFirstValue(ClaimTypes.Name);
+        _logger.LogInformation("Asset {Id} deleted by user {User}", id, currentUserEmpNo);
         
         return Ok("Deleted");
     }
@@ -248,7 +260,12 @@ public class InventoryController : ControllerBase
         workbook.SaveAs(stream);
         var content = stream.ToArray();
 
-        string fileName = $"TCIL_Inventory_Report_{type}_{DateTime.Now:yyyy-MM-dd}.xlsx";
+        // Prevent header injection / path traversal by sanitizing the type input
+        string safeType = string.Join("_", type.Split(Path.GetInvalidFileNameChars()));
+        string fileName = $"TCIL_Inventory_Report_{safeType}_{DateTime.Now:yyyy-MM-dd}.xlsx";
+        
+        _logger.LogInformation("User {User} exported Excel report for type: {safeType}", empNo, safeType);
+
         Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{fileName}\"");
         return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
     }

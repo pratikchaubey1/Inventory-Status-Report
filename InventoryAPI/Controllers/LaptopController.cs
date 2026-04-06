@@ -1,49 +1,66 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InventoryAPI.Data;
 using InventoryAPI.Models;
+using Microsoft.Extensions.Logging;
 
-namespace InventoryAPI.Controllers
+namespace InventoryAPI.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+[Authorize] // Secure all endpoints by default
+public class LaptopController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class LaptopController : ControllerBase
+    private readonly AppDbContext _context;
+    private readonly ILogger<LaptopController> _logger;
+
+    public LaptopController(AppDbContext context, ILogger<LaptopController> logger)
     {
-        private readonly AppDbContext _context;
+        _context = context;
+        _logger = logger;
+    }
 
-        public LaptopController(AppDbContext context)
+    // GET: api/laptop
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Laptop>>> GetLaptops()
+    {
+        return await _context.Laptops.ToListAsync();
+    }
+
+    // POST: api/laptop
+    [HttpPost]
+    [Authorize(Roles = "Admin")] // Only Admins can add
+    public async Task<ActionResult<Laptop>> AddLaptop(Laptop laptop)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/laptop
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Laptop>>> GetLaptops()
+        _context.Laptops.Add(laptop);
+        await _context.SaveChangesAsync();
+        
+        _logger.LogInformation("New laptop added: {Id}", laptop.Id);
+        return Ok(laptop);
+    }
+
+    // DELETE: api/laptop/5
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")] // Only Admins can delete
+    public async Task<IActionResult> DeleteLaptop(int id)
+    {
+        var laptop = await _context.Laptops.FindAsync(id);
+        if (laptop == null)
         {
-            return await _context.Laptops.ToListAsync();
+            _logger.LogWarning("Failed delete attempt. Laptop not found: {Id}", id);
+            return NotFound();
         }
 
-        // POST: api/laptop
-        [HttpPost]
-        public async Task<ActionResult<Laptop>> AddLaptop(Laptop laptop)
-        {
-            _context.Laptops.Add(laptop);
-            await _context.SaveChangesAsync();
-            return Ok(laptop);
-        }
+        _context.Laptops.Remove(laptop);
+        await _context.SaveChangesAsync();
 
-        // DELETE: api/laptop/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLaptop(int id)
-        {
-            var laptop = await _context.Laptops.FindAsync(id);
-            if (laptop == null)
-                return NotFound();
-
-            _context.Laptops.Remove(laptop);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+        _logger.LogInformation("Laptop deleted by Admin: {Id}", id);
+        return NoContent();
     }
 }

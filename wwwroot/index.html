@@ -40,12 +40,10 @@
                 <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Master Access Level Root</p>
             </div>
             <div class="dashboard-btn-group">
-                <button onclick="showReportSection()" style="background: #6366f1;"><i class="fas fa-chart-line"></i>
+                <button onclick="console.log('Reports button clicked'); showReportsDashboard();" style="background: #6366f1;"><i class="fas fa-chart-line"></i>
                     Report Section</button>
                 <button onclick="showAddForm()" style="background: var(--primary);"><i class="fas fa-plus-circle"></i>
                     New Entry</button>
-                <button onclick="showViewSection()" style="background: var(--primary);"><i class="fas fa-list"></i>
-                    View Data</button>
                 <button onclick="showManageSection()" style="background: var(--primary);"><i class="fas fa-tasks"></i>
                     Manage Data</button>
                 <button onclick="logout()"
@@ -57,7 +55,7 @@
         <div id="addForm" class="hidden card inventory-form">
             <div style="margin-bottom: 25px; display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-start;">
                 <button class="filter-btn active" id="btn-add-asset" onclick="setEntryType('Asset')">Asset Entry</button>
-                <button class="filter-btn" id="btn-add-employee" onclick="setEntryType('Employee')">Employee Entry</button>
+                
             </div>
             <h3 id="addHeading" style="margin-bottom: 20px; font-size: 18px;">Asset Entry</h3>
             
@@ -163,8 +161,27 @@
             </div>
         </div>
 
+        <div id="reportsDashboard" class="hidden card">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">Reports Dashboard</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <button class="stat-card" style="flex: 1; min-width: 250px; padding: 25px; text-align: left; background: #fff; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s;" onclick="showAssetReports()" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.05)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';">
+                    <i class="fas fa-box" style="font-size: 28px; color: #3b82f6; margin-bottom: 12px;"></i>
+                    <h4 style="font-size: 16px; margin-bottom: 6px; color: var(--text-main);">Assets Data</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); font-weight: 400;">View inventory status, categories, and deployed asset details.</p>
+                </button>
+                <button class="stat-card" style="flex: 1; min-width: 250px; padding: 25px; text-align: left; background: #fff; border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s;" onclick="showEmployeeReports()" onmouseover="this.style.borderColor='var(--primary)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.05)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none';">
+                    <i class="fas fa-users" style="font-size: 28px; color: #8b5cf6; margin-bottom: 12px;"></i>
+                    <h4 style="font-size: 16px; margin-bottom: 6px; color: var(--text-main);">Employees Data</h4>
+                    <p style="font-size: 13px; color: var(--text-muted); font-weight: 400;">View and filter employee records and their assigned assets.</p>
+                </button>
+            </div>
+        </div>
+
         <div id="reportSection" class="hidden card">
-            <h3 style="margin-bottom: 20px; font-size: 18px;">Inventory Status Report</h3>
+            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin-bottom: 0; font-size: 18px;">Inventory Status Report</h3>
+                <button onclick="showReportsDashboard()" style="width: auto; padding: 6px 14px; background: #f1f5f9; border: 1px solid var(--border); color: var(--text-main); font-size: 13px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+            </div>
             <div class="report-stats" style="display: flex; gap: 20px; margin-bottom: 30px;">
                 <div class="stat-card"
                     style="flex: 1; padding: 20px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--border);">
@@ -183,6 +200,28 @@
                     <h4 id="issuedAssets" style="font-size: 24px; margin-top: 5px;">0</h4>
                 </div>
             </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; align-items: flex-end;">
+                <div style="flex: 2; min-width: 250px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; display: block;">Search Assets</label>
+                    <div class="search-wrapper">
+                        <i class="fas fa-search input-icon" style="z-index: 2;"></i>
+                        <input type="text" id="assetReportSearch" onkeyup="generateReport()" placeholder="Search by Make/Model, Assignee, Emp No..." style="width: 100%; border: 1px solid var(--border); padding: 10px 10px 10px 35px; border-radius: 8px; font-size: 14px;">
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; display: block;">From Date</label>
+                    <input type="date" id="assetReportFromDate" onchange="generateReport()" style="width: 100%; border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 14px;">
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; display: block;">To Date</label>
+                    <input type="date" id="assetReportToDate" onchange="generateReport()" style="width: 100%; border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 14px;">
+                </div>
+                <div style="flex: 0; min-width: 130px; align-self: flex-end;">
+                    <button onclick="clearAssetFilters()" style="width: 100%; padding: 10px 14px; background: #fee2e2; border: 1px solid #fca5a5; color: #dc2626; border-radius: 8px; font-size: 13px;"><i class="fas fa-times-circle"></i> Clear Filters</button>
+                </div>
+            </div>
+
             <div
                 style="margin-bottom: 25px; display: flex; flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: flex-start;">
                 <button class="filter-btn active" onclick="filterReportByType('All', this)">All Category</button>
@@ -200,9 +239,33 @@
                 </button>
             </div>
             <div id="reportDetails"></div>
-            <button onclick="showReportSection()"
-                style="width: auto; margin-top: 20px; background: #f1f5f9; color: var(--text-main);"><i
-                    class="fas fa-times"></i> Close Report</button>
+        </div>
+
+        <div id="employeeReportSection" class="hidden card">
+            <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin-bottom: 0; font-size: 18px;">Employees Data Report</h3>
+                <button onclick="showReportsDashboard()" style="width: auto; padding: 6px 14px; background: #f1f5f9; border: 1px solid var(--border); color: var(--text-main); font-size: 13px;"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+            </div>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; align-items: flex-end;">
+                <div style="flex: 2; min-width: 250px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; display: block;">Search Personnel</label>
+                    <div class="search-wrapper">
+                        <i class="fas fa-search input-icon" style="z-index: 2;"></i>
+                        <input type="text" id="empReportSearch" onkeyup="filterEmployeeReport()" placeholder="Search by Employee ID or Name..." style="width: 100%; border: 1px solid var(--border); padding: 10px 10px 10px 35px; border-radius: 8px; font-size: 14px;">
+                    </div>
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; display: block;">From Date</label>
+                    <input type="date" id="empReportFromDate" onchange="filterEmployeeReport()" style="width: 100%; border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 14px;">
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; display: block;">To Date</label>
+                    <input type="date" id="empReportToDate" onchange="filterEmployeeReport()" style="width: 100%; border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-size: 14px;">
+                </div>
+            </div>
+            
+            <div id="employeeReportDetails"></div>
         </div>
 
         <!-- History Modal -->
@@ -218,29 +281,13 @@
                 <div id="historyContent"></div>
             </div>
         </div>
-        <div id="viewSection" class="hidden">
-            <div class="card" style="margin-bottom: 20px;">
-                <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-                    <button class="filter-btn active" id="btn-view-asset" onclick="setViewType('Asset')">Asset Data</button>
-                    <button class="filter-btn" id="btn-view-employee" onclick="setViewType('Employee')">Employee Data</button>
-                </div>
-                <h3 id="viewHeading" style="margin-bottom: 0; font-size: 18px;">Asset Entry</h3>
-                <div id="viewSearchContainer" class="hidden" style="margin-top: 15px;">
-                    <label style="font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; display: block;">Search by Employee ID</label>
-                    <div class="search-wrapper">
-                        <i class="fas fa-search input-icon"></i>
-                        <input type="text" id="viewEmployeeSearch" onkeyup="renderViewData()" placeholder="Enter Employee ID...">
-                    </div>
-                </div>
-            </div>
-            <div id="inventoryList" class="inventory-container"></div>
-        </div>
+
 
         <div id="manageSection" class="hidden">
             <div class="card" style="margin-bottom: 20px;">
                 <div style="margin-bottom: 20px; display: flex; gap: 10px;">
                     <button class="filter-btn active" id="btn-manage-asset" onclick="setManageType('Asset')">Asset Manage</button>
-                    <button class="filter-btn" id="btn-manage-employee" onclick="setManageType('Employee')">Employee Manage</button>
+                    
                 </div>
                 <h3 id="manageHeading" style="margin-bottom: 0; font-size: 18px;">Asset Management</h3>
                 <div id="manageSearchContainer" class="hidden" style="margin-top: 15px;">
@@ -274,7 +321,7 @@
         style="position: fixed; bottom: 20px; text-align: center; width: 100%; color: var(--text-muted); font-size: 12px; pointer-events: none;">
         TCIL
     </footer>
-    <script src="app.js?v=1.3"></script>
+    <script src="app.js?v=1.5"></script>
 </body>
 
 </html>

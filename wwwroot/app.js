@@ -143,7 +143,7 @@ function showPanel(role) {
         document.getElementById("adminPanel").classList.remove("hidden");
         loadInventory();
         loadUsers();
-        showViewSection(); // Default section
+        showReportsDashboard(); // Default section
     } else {
         document.getElementById("employeePanel").classList.remove("hidden");
         loadInventory();
@@ -156,7 +156,7 @@ function logout() {
 }
 
 function hideAllAdminSections() {
-    ['reportSection', 'addForm', 'viewSection', 'manageSection'].forEach(id => {
+    ['reportSection', 'addForm', 'manageSection', 'reportsDashboard', 'employeeReportSection'].forEach(id => {
         const el = document.getElementById(id);
         if(el) el.classList.add('hidden');
     });
@@ -183,10 +183,129 @@ function showManageSection() {
     setManageType(currentManageType);
 }
 
-function showReportSection() {
+function showReportsDashboard() {
+    hideAllAdminSections();
+    const db = document.getElementById("reportsDashboard");
+    if(db) db.classList.remove("hidden");
+}
+
+function showAssetReports() {
     hideAllAdminSections();
     document.getElementById("reportSection").classList.remove("hidden");
     generateReport();
+}
+
+function showEmployeeReports() {
+    hideAllAdminSections();
+    const sec = document.getElementById("employeeReportSection");
+    if(sec) sec.classList.remove("hidden");
+    
+    const searchEl = document.getElementById("empReportSearch");
+    if (searchEl) searchEl.value = "";
+    const fromEl = document.getElementById("empReportFromDate");
+    if (fromEl) fromEl.value = "";
+    const toEl = document.getElementById("empReportToDate");
+    if (toEl) toEl.value = "";
+    
+    filterEmployeeReport();
+}
+
+function filterEmployeeReport() {
+    const searchVal = document.getElementById("empReportSearch").value.toLowerCase().trim();
+    const fromDateVal = document.getElementById("empReportFromDate").value;
+    const toDateVal = document.getElementById("empReportToDate").value;
+    
+    if (fromDateVal && toDateVal && new Date(fromDateVal) > new Date(toDateVal)) {
+        document.getElementById("employeeReportDetails").innerHTML = "<p style='padding: 20px; color: #ef4444; font-weight: 500;'>Error: From Date cannot be greater than To Date.</p>";
+        return;
+    }
+    
+    let filteredUsers = userCache || [];
+    
+    if (searchVal) {
+        filteredUsers = filteredUsers.filter(u => 
+            (u.empNo && u.empNo.toLowerCase().includes(searchVal)) || 
+            (u.fullName && u.fullName.toLowerCase().includes(searchVal))
+        );
+    }
+    
+    renderEmployeeReport(filteredUsers, fromDateVal, toDateVal);
+}
+
+function renderEmployeeReport(users, fromStr, toStr) {
+    const container = document.getElementById("employeeReportDetails");
+    if (!container) return;
+
+    const fromDate = fromStr ? new Date(fromStr) : null;
+    const toDate = toStr ? new Date(toStr) : null;
+    if (toDate) {
+        toDate.setHours(23, 59, 59, 999);
+    }
+    
+    let html = `
+        <div class="inventory-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Emp No</th>
+                        <th>Full Name</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Assigned Assets (Filtered)</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+    
+    let renderedCount = 0;
+    
+    const rowsHtml = users.map(u => {
+        let assigned = inventoryCache.filter(item => item.empNo === u.empNo && item.status === 'Issued');
+        
+        if (fromDate || toDate) {
+            assigned = assigned.filter(a => {
+                if (!a.issuedDate) return false;
+                const idate = new Date(a.issuedDate);
+                if (fromDate && idate < fromDate) return false;
+                if (toDate && idate > toDate) return false;
+                return true;
+            });
+        }
+        
+        if ((fromDate || toDate) && assigned.length === 0) {
+            return '';
+        }
+
+        renderedCount++;
+        
+        const assetsHtml = assigned.length > 0 
+            ? assigned.map(a => `<div style="margin-bottom:4px; line-height:1.2;"><strong>${a.productType}</strong>: ${a.makeAndModel || a.assetId || '-'} <br><span style="font-size:10px; color:var(--text-muted);">Issued: ${formatDate(a.issuedDate)}</span></div>`).join("") 
+            : '<span style="color: var(--text-muted); font-size: 11px;">No assets assigned</span>';
+        
+        return `
+        <tr>
+            <td>${u.empNo || '-'}</td>
+            <td>${u.fullName || '-'}</td>
+            <td>${u.department || '-'}</td>
+            <td>${u.role === 0 || u.role === 'Admin' ? 'Admin' : 'Employee'}</td>
+            <td>${assetsHtml}</td>
+        </tr>
+        `;
+    }).join("");
+    
+    if (renderedCount === 0) {
+        html += `<tr><td colspan="5" style="text-align: center; padding: 20px;">No employees found matching the given criteria.</td></tr>`;
+    } else {
+        html += rowsHtml;
+    }
+    
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    container.innerHTML = html;
 }
 
 function setEntryType(type) {
@@ -231,7 +350,6 @@ async function loadUsers() {
             const data = await res.json();
             userCache = data;
             if (currentUser.role === "Admin") {
-                renderViewData();
                 renderManageData();
             }
         }
@@ -246,6 +364,24 @@ function filterReportByType(type, btn) {
     currentTypeFilter = type;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
+    generateReport();
+}
+
+function clearAssetFilters() {
+    const searchInput = document.getElementById("assetReportSearch");
+    const fromInput = document.getElementById("assetReportFromDate");
+    const toInput = document.getElementById("assetReportToDate");
+    
+    if (searchInput) searchInput.value = "";
+    if (fromInput) fromInput.value = "";
+    if (toInput) toInput.value = "";
+    
+    currentTypeFilter = "All";
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    // Select the first All Category button:
+    const btnAll = document.querySelector('.filter-btn');
+    if (btnAll) btnAll.classList.add('active');
+    
     generateReport();
 }
 
@@ -270,6 +406,42 @@ function generateReport() {
         filteredCache = inventoryCache.filter(i =>
             i.productType && i.productType.toLowerCase().includes(currentTypeFilter.toLowerCase())
         );
+    }
+
+    const searchVal = (document.getElementById("assetReportSearch")?.value || "").toLowerCase().trim();
+    const fromDateVal = document.getElementById("assetReportFromDate")?.value;
+    const toDateVal = document.getElementById("assetReportToDate")?.value;
+
+    if (fromDateVal && toDateVal && new Date(fromDateVal) > new Date(toDateVal)) {
+        document.getElementById("reportDetails").innerHTML = "<p style='padding: 20px; color: #ef4444; font-weight: 500;'>Error: From Date cannot be greater than To Date.</p>";
+        return;
+    }
+
+    if (searchVal) {
+        filteredCache = filteredCache.filter(i => {
+            return (
+                (i.makeAndModel && i.makeAndModel.toLowerCase().includes(searchVal)) ||
+                (i.currentlyIssuedTo && i.currentlyIssuedTo.toLowerCase().includes(searchVal)) ||
+                (i.empNo && i.empNo.toLowerCase().includes(searchVal)) ||
+                (i.productType && i.productType.toLowerCase().includes(searchVal)) ||
+                (i.assetId && i.assetId.toLowerCase().includes(searchVal))
+            );
+        });
+    }
+
+    if (fromDateVal || toDateVal) {
+        let fromD = fromDateVal ? new Date(fromDateVal) : null;
+        let toD = toDateVal ? new Date(toDateVal) : null;
+        if (toD) toD.setHours(23, 59, 59, 999);
+
+        filteredCache = filteredCache.filter(i => {
+            const dateStr = i.status === 'Issued' ? i.issuedDate : i.purchaseDate;
+            if (!dateStr) return false;
+            const d = new Date(dateStr);
+            if (fromD && d < fromD) return false;
+            if (toD && d > toD) return false;
+            return true;
+        });
     }
 
     const total = filteredCache.length;
@@ -317,7 +489,7 @@ function generateReport() {
                                 <td>${item.specifications || '-'}</td>
                                 <td>${item.remarks || '-'}</td>
                             </tr>
-                        `).join("") : '<tr><td colspan="10" style="text-align: center; padding: 20px;">No assets found in this category.</td></tr>'}
+                        `).join("") : '<tr><td colspan="10" style="text-align: center; padding: 20px;">No data found matching your filters.</td></tr>'}
                     </tbody>
                 </table>
             </div>
@@ -479,7 +651,6 @@ async function loadInventory() {
         inventoryCache = items; // Store in cache
 
         if (currentUser.role === "Admin") {
-            renderViewData();
             renderManageData();
         } else {
             const container = document.getElementById("employeeInventory");
